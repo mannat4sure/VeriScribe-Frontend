@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Veriscribe</title>
+  <title>Veriscribe &ndash; Translate &amp; Verify Code Between Python, Java and C++</title>
+  <meta name="description" content="Veriscribe translates code between Python, Java and C++ and verifies the result with equivalence tests, so the translated program behaves exactly like the original.">
+  <meta name="theme-color" content="#1f3d2b">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Veriscribe: Translate, Verify, Execute">
+  <meta property="og:description" content="Cross-language code translation with automatic equivalence checks.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3d2b'/%3E%3Cpath d='M14 18l18 30 18-30' fill='none' stroke='%23e8dcc4' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -286,15 +292,97 @@
     }
   </style>
 
+
+  <style id="site-fixes">
+    /* No sideways scrolling anywhere */
+    html, body { overflow-x: hidden; }
+    body { max-width: 100vw; }
+
+    /* Clickable logo */
+    .brand-link { display: flex; align-items: center; color: inherit; text-decoration: none; border-radius: 6px; }
+    .brand-link:focus-visible { outline: 2px solid var(--sand); outline-offset: 4px; }
+
+    /* Mobile menu button (hidden on desktop) */
+    .menu-btn {
+      display: none; align-items: center; justify-content: center;
+      width: 36px; height: 32px; padding: 0;
+      border: 1px solid rgba(232,220,196,.4); border-radius: 6px;
+      background: transparent; color: var(--sand); cursor: pointer;
+      transition: background-color .15s;
+    }
+    .menu-btn:hover { background: rgba(232,220,196,.14); }
+    .menu-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+    .menu-btn:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+
+    /* Form messages */
+    .dlg-msg.is-error { border-color: rgba(155,44,26,.45); background: rgba(155,44,26,.08); color: var(--danger); }
+    .dlg-form input.is-invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,44,26,.15); }
+
+    /* Toast */
+    .toast {
+      position: fixed; left: 50%; bottom: 20px; z-index: 200;
+      max-width: calc(100vw - 24px);
+      padding: 10px 16px; border-radius: 10px;
+      background: var(--forest); color: var(--sand);
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      opacity: 0; transform: translate(-50%, 12px); pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.is-error { background: var(--danger); }
+
+    /* Tablets and phones */
+    @media (max-width: 860px) {
+      .pane-head { flex-wrap: wrap; height: auto; min-height: 44px; row-gap: 6px; padding: 6px 12px; }
+      .hint { display: none; }
+      .file-name { max-width: 120px; }
+      .bench { padding: 10px 12px; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 0 10px; }
+      .brand-logo-svg { height: 34px !important; }
+      .topbar-actions { gap: 8px; }
+      .menu-btn { display: inline-flex; }
+      #exportBtn { width: 34px; padding: 0; gap: 0; font-size: 0; }
+
+      .auth-nav {
+        position: fixed; top: 72px; right: 10px; z-index: 90;
+        flex-direction: column; align-items: stretch; gap: 6px;
+        min-width: 190px; padding: 10px;
+        border: 1px solid rgba(232,220,196,.35); border-radius: 12px;
+        background: var(--forest);
+        box-shadow: 0 16px 36px rgba(0,0,0,.4);
+        opacity: 0; visibility: hidden; pointer-events: none;
+        transform: translateY(-6px);
+        transition: opacity .18s ease, transform .18s ease, visibility .18s;
+      }
+      .auth-nav.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+      .auth-nav .btn-forest { height: 42px; justify-content: flex-start; padding: 0 14px; font-size: 14px; }
+    }
+
+    @media (max-width: 560px) {
+      .dlg { width: 94vw; }
+      .dlg-form { padding: 18px; }
+      .dlg-form input { font-size: 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toast, .auth-nav, .menu-btn { transition: none; }
+    }
+  </style>
 </head>
 <body>
   <header class="topbar" style="height:68px">
     <div class="brand">
+      <a class="brand-link" id="brandLink" href="./" aria-label="Veriscribe home">
       <svg class="brand-logo-svg" role="img" aria-label="Veriscribe - Translate, Verify, Execute"
            viewBox="0 0 1252 248" height="52" style="height:52px;width:auto;display:block;flex:none" fill="currentColor" fill-rule="evenodd">
         <title>Veriscribe</title>
         <path d="M383.8,217 384.5,216 384.7,212 384.7,10 384.4,5 383,3.8 380.7,5 380.4,9 380.3,211 381,216.9 382,217.5ZM174.6,220 186,217.3 193.7,214 201,208.8 207.2,202 309.5,20 311.6,14 311.4,11 310.3,9 308,7.6 306,7.3 216,7.4 210,8.5 206.4,11 204.7,15 205.7,18 214.1,26 221.6,35 225,37.2 234,46.3 243.3,57 246.2,64 246.8,73 245.1,79 241.3,85 217.6,109 185.2,167 181.5,173 179,174.5 174.8,173 170.8,168 145.3,120 128.3,90 119.7,79 114.8,71 110.6,60 110.1,54 110.9,50 110.3,48 95,21.2 91,16.4 86,12.9 81,10.7 65,7.8 16,7.3 4.2,8 12.9,18 21.5,31 121.7,198 128,207.3 132,211.6 136,214.4 142,217.3 148,219.2 158,220.5ZM741.9,58 746.3,55 749.4,50 750.2,45 749,39.6 746,35 742,32.5 737,31.5 731,32.7 727,35.7 724.8,39 723.6,44 724.7,51 727.3,55 732,58 737,59ZM1026,58 1030,55.7 1033.2,52 1034.6,47 1034.1,41 1032,36.7 1027.5,33 1023,31.5 1018,31.8 1013,34.3 1009.8,38 1008.3,44 1008.9,50 1011,54 1015,57.3 1021,58.9ZM1111,162 1122,159.1 1132,153.2 1139.3,146 1145,137 1148.2,128 1149.7,114 1148.3,102 1145.3,93 1140,84.2 1131.7,76 1123,70.8 1114,67.8 1102,66.8 1092,68.6 1084.1,72 1074.7,79 1073.9,77 1073.7,36 1073,34.9 1071,34.4 1052,34.8 1051.3,40 1051.7,160 1054,160.7 1072,160.4 1073.4,159 1073.9,151 1075,150.2 1082,156.2 1090,160.2 1101,162.3ZM509,161 514,159.1 517,156 565.6,53 570.5,44 576.7,36 575,35.4 555,35.9 549,37.8 544,42.1 541.6,46 508.2,120 506,124.4 505,125 502.7,121 467,42.6 461.8,38 456,35.9 447,35.4 436,36 448.4,61 493,155.9 496,159 499,160.4 504,161.3ZM176.7,100 178.1,97 195.3,42 195.4,40 193,38 188,38 185.9,40 168.2,97 168.2,99 170,100.6 175,100.8ZM159.9,96 163.4,92 164,90 163.4,88 144.5,70 145.8,68 163.4,51 163.7,49 162.8,47 160,43.6 158,43 155,44.7 133,65.5 131.2,68 130.8,70 131.2,72 132.6,74 156,95.7 158,96.6ZM205.8,96 230,73.9 231.4,72 231.7,70 231.4,68 230,66 207,44 205,43.2 203,43.6 199.9,47 199,49 199.4,51 216.3,67 218.4,70 199.5,88 199.1,90 200.7,93 203,95.5ZM611.3,162 623,159.2 629,156.3 638,149.8 640.6,147 641.1,145 629,133.3 619,140.6 612,143.2 603,144 595,142.4 589,139.5 582.8,134 579.3,128 577.9,123 578,121 582,120.4 633,120.4 644,119.8 645.3,118 645.8,113 644.3,100 641.4,91 637.3,84 632,77.8 625,72.7 619,69.8 611,67.6 599,66.9 591,67.9 582,70.9 573,75.9 565.8,83 560.9,90 556.8,100 555.5,107 554.9,117 556.5,128 559,135 564.5,144 569.8,150 577,155.3 585,159.2 593,161.4 602,162.5ZM806.4,162 815,160.2 821,158 826,155.2 832,149.7 835.2,144 837.1,136 837.2,130 836.1,125 834.3,121 831,116.5 828,113.9 823,110.9 814,107.7 794,103.3 788.1,101 785.7,99 784.5,97 784.5,92 786,89.4 789,86.8 793,85.3 800,84.6 813,86.6 825,91.8 826,91.7 833.1,80 834.2,77 826,71.8 816,68.6 803,66.8 790,67.7 782,70 776,72.8 771.4,76 767.8,80 764.8,85 763.3,90 762.8,98 764,104 768.4,112 775.3,117 784,120.4 804,124.8 812,127.8 815.3,132 815.4,137 813,140.6 809,143 804,144.2 797,144.4 784,142.1 769,135.1 760.8,147 759.8,150 769,156.1 780,160.2 792,162ZM899.3,162 909,160.1 918,156.2 924,152.2 928.6,148 930.2,146 930.5,144 924,137.9 917.8,133 916,132.3 908,139.3 904,141.4 898,143.1 888,143.1 882,141.2 878.1,139 874,135.7 870.8,132 866.8,123 865.8,113 867.9,103 871,97.2 875,92.8 881,88.7 886,86.8 895,86.2 902,87.6 908,90.5 916,97.4 918,96.5 928.5,88 930.6,86 930.8,85 928,81 922.3,76 917,72.5 911,69.9 897,66.9 890,66.9 883,67.7 873,70.5 866,74 860,78.2 852.5,86 847.6,95 844.6,103 843.5,112 843.8,123 845.9,131 850.7,141 857,148.7 864,154.2 871,158 881,161.3 890,162.4ZM1213.2,162 1223,160 1232,156.2 1240,150.6 1243.5,147 1244,145 1239.5,140 1232,133.5 1230.4,134 1224,139.3 1215,143 1206,143.9 1198,142.4 1191.2,139 1185.8,134 1181.8,127 1180.8,121 1183,120.4 1246,119.9 1247.3,119 1248.4,115 1247.3,100 1244.3,91 1240.4,84 1235.2,78 1230,73.9 1222,69.8 1215,67.8 1205,66.7 1196,67.5 1188,69.7 1180,73.7 1172.8,79 1166.7,86 1160.6,98 1158.8,105 1157.9,116 1158.8,125 1160.8,132 1165.9,142 1171,148.5 1178,154.2 1185,158.2 1194,161.1 1203,162.4ZM679.6,160 680.2,158 680.1,112 680.5,107 681.9,102 685.9,95 689.1,92 693,89.6 700,87.4 706,87.3 711,88.1 712,87.6 713.4,70 712,68.2 708,67.4 702,67.3 694,69 688,72 681,78.9 680,79 679.5,71 678,69.2 660,68.9 657.7,70 657.6,159 658.1,160 660,160.7 678,160.6ZM964,160 964.7,154 964.7,111 966.4,102 970.3,95 977,89.9 984,87.6 995,88 996.7,87 997.8,70 997.6,69 996,67.9 989,67.2 979,68.9 972,72.5 965,79.3 964,78 963.8,71 962,69 944,69 942.2,70 941.9,159 942.3,160 944,160.7 962,160.6ZM747.6,160 748.2,158 748.4,149 748.2,71 747.9,70 746,69 727,69.2 725.9,70 725.6,72 725.7,159 726.2,160 728,160.6 746,160.6ZM1032,160 1032.7,149 1032.6,71 1032,69.5 1030,68.8 1012,69.2 1010.3,71 1010.1,76 1010.3,159 1011,160.2 1013,160.6 1030,160.6ZM624,105.4 579,105.7 577.9,105 577.8,104 580.9,96 586.2,90 594,85.8 603,84.8 608,85.5 612,86.9 619,92 623.2,99 624.5,104ZM1227,105 1223,105.7 1183,105.7 1181,105.2 1180.8,104 1184,96.1 1189.4,90 1198,85.5 1206,84.7 1211,85.4 1215,86.9 1220.9,91 1225.2,97 1227.2,103ZM1104,143.1 1098,143.4 1094,142.8 1089,141.2 1084,138.3 1080.4,135 1076.9,130 1074.6,125 1073.7,121 1073.3,113 1073.8,108 1075.8,102 1078.5,97 1082,93 1086.1,90 1091,87.6 1097,86.2 1107,86.9 1112,88.6 1117,91.8 1120.1,95 1124.5,102 1126.3,107 1127.1,112 1126.9,118 1125.5,125 1121.3,133 1117,137.4 1113,140.1ZM601.5,236 602.1,234 602.1,209 601,206.7 600,206.8 599.2,208 599,225 599.3,235 600,236.2ZM890.4,210 891,207.6 890,206.7 888.2,207 887.5,208 888,209.8 889,210.4ZM908.9,236 909.5,219 911,217.6 915,217.4 915.6,216 915,215.3 910,214.8 909.3,214 909.3,212 911,209.4 916,209 916.6,208 915,206.5 911,206.5 908.3,208 907,210 906.3,214 903.3,216 903.5,217 906.3,219 906.5,235 907,236.2ZM463.5,236 464,235 464.3,212 466,210.7 473,210.4 473.5,209 470,208.2 452,208.6 452,210.4 460,210.9 461,212 461.3,235 462,236.2ZM811.9,236 823.3,209 822,208.2 820.5,209 811.4,230 810,230.8 800.2,209 798,208.2 797.2,209 797.7,211 807.9,235 809,236.2ZM1056.5,236 1057.1,235 1056,233.9 1043,233.7 1041,233.1 1040.4,226 1040.8,224 1042,223.5 1053,223.5 1054.6,223 1054.9,222 1054,220.8 1041,220.3 1040.5,215 1041,211.3 1043,210.7 1055,210.6 1056.5,210 1056.5,209 1054,208.2 1038,208.6 1037.4,213 1037.8,236 1040,236.5ZM658.1,236 659,235 658,233.6 655,233.9 652.8,233 651.7,229 652,218.6 653,217.7 657,217.5 657.9,217 658,216 657,215.2 653,214.9 652,214.2 651.4,211 650,210.4 649,211 648,214.9 645.3,216 645.4,217 648,217.9 648.5,219 649,232.5 650,234.7 652,236.2 655,236.6ZM1203,236 1203.9,235 1203,233.7 1200,234 1197.7,233 1196.7,231 1196.6,228 1197,218.4 1198,217.7 1202,217.6 1202.9,216 1202,215.2 1198,214.9 1197,214.2 1196.3,211 1195,210.5 1194,211.6 1193.7,214 1190.4,216 1190.6,217 1193,217.8 1193.7,219 1194.2,233 1195.3,235 1197,236.1 1200,236.6ZM486.7,236 487.3,235 487.9,222 490.1,219 495,217 495,215.9 494,214.9 491,215.5 488,217.3 486,215.2 484.5,216 484.3,235 485,236.1ZM522.8,236 523.3,222 521.8,218 519,215.7 515,214.8 510,215.5 507,216.8 506.4,218 507,219.1 508,219.4 513,217.5 517,217.9 519.4,220 520,223 519,224.1 511,224.4 507.1,226 505.7,228 505.4,230 506.5,234 508,235.4 511,236.5 516,236.3 519,235 520,235 521,236.1ZM556.5,236 557.2,235 557.3,222 556.5,219 555.1,217 550,214.8 546,215.1 542,217 539,215.1 538,216.4 537.8,222 538,235 538.5,236 540,236.1 540.7,235 541.1,224 542,221 544,218.7 548,217.6 552,218.8 553.7,221 554.4,224 554.5,235 555,236ZM582.7,236 586.2,233 586.7,231 586.1,228 583,225.4 574.4,223 573.4,222 573.3,220 576,217.6 580,217.4 584,218.6 585.2,217 584,215.9 580,214.9 574,215.5 571.8,217 570.5,219 570.3,222 571.1,224 574,226.2 582,228.5 583.4,231 583,232.2 581,233.6 576,233.8 571,232.4 569.8,234 571,235.2 575,236.5 579,236.7ZM632.7,236 633.3,235 633.3,222 632,218 629,215.6 625,214.7 620,215.6 617.4,217 616.8,218 618,219.3 622,217.7 627,217.9 629.5,220 630.3,223 629,224.2 621,224.5 617.4,226 615.8,228 615.4,230 616.5,234 618,235.5 621,236.6 626,236.4 630,234.9 631,236.2ZM684.4,236 687.6,234 687.9,233 687.2,232 682,233.8 678,233.8 674.7,232 672.6,228 674,226.7 689,226.3 689.5,224 688.3,220 686,217.2 683,215.5 679,214.8 675,215.7 672,218 669.7,222 669.3,227 670.5,231 672.7,234 676,236 681,236.6ZM846.7,236 850,234 850.3,233 849.4,232 844,233.8 840,233.5 836.3,231 834.9,228 835.5,227 837,226.6 851,226.6 852.1,225 851.4,221 849.5,218 846,215.5 842,214.7 837,215.9 833.6,219 831.8,223 831.5,227 832.6,231 835,234.3 838.2,236 842,236.7ZM867.3,236 868.3,222 871,218.8 875,217.5 875.6,216 875,214.9 872,215.3 869,216.8 868,216.7 867,215.2 866,215 864.8,216 864.7,235 866,236.4ZM1111.2,236 1114.5,234 1114.8,233 1114,231.8 1110,233.6 1105,233.8 1101,231.5 1099.5,228 1101,226.8 1116,226.3 1116.5,224 1115.3,220 1113,217.1 1110,215.4 1106,214.8 1102,215.8 1098.8,218 1096.8,221 1096.1,226 1097,230.4 1099.5,234 1103,236.1 1107,236.7ZM1141.8,236 1145.3,234 1145.8,232 1144,231.4 1139,233.9 1134.3,233 1132,231.1 1130.9,229 1130.4,224 1132.4,220 1136,217.7 1140,217.6 1144,219.9 1145.8,219 1145.6,218 1143,216 1139.7,215 1136.3,215 1133,215.9 1130,218 1127.7,222 1127.2,226 1128.4,231 1130.6,234 1134,236 1138,236.6ZM1229,236 1232.3,234 1232.6,233 1232,232.1 1231,231.8 1226,233.9 1222,233.6 1218.5,231 1217.4,228 1219,226.8 1233,226.5 1234.1,226 1234.3,225 1233.5,221 1231.6,218 1229,216 1224,214.8 1220,215.6 1216.6,218 1214.7,221 1213.8,226 1214.6,230 1217,233.6 1220,235.6 1224,236.6ZM890.3,236 890.8,217 890,215.2 889,215.1 887.8,217 887.9,235 889,236.4ZM930.1,244 932,242.9 934,240 943.9,217 944.1,216 943,215.1 941.4,216 935,230.6 934,231.5 927,216.1 925,215.2 924.2,216 932.4,236 930,240.7 928,241.5 924,241.3 923.3,243 926,244.3ZM1085.8,236 1085.8,235 1079.9,227 1079.3,225 1085.6,216 1085,215.3 1083,215.7 1078.3,222 1077,222.5 1071.8,216 1070,215.2 1069,215.6 1069.2,217 1074.4,224 1075,226 1068.5,235 1068.6,236 1071,235.8 1077,228.6 1078.1,229 1083,235.5 1084,236.2ZM1177.7,236 1178.2,234 1178,215.9 1177,215.1 1175.1,216 1175.1,227 1174.4,230 1172,232.9 1168,233.9 1165,233.4 1162.5,231 1161.7,228 1161.5,216 1160,215.1 1159,215.6 1158.7,229 1159.4,232 1161,234.4 1163.4,236 1166,236.6 1171,236.3 1174,234.7 1175,234.9 1176,236.3ZM685,224.2 674,224.2 672.7,223 674,220.1 676,218.3 681,217.5 685.4,220 686.5,223ZM750.8,230 753.7,226 754,224 753.3,221 751.6,219 749,217.7 746,217.6 744,218.4 742,220.2 740.8,223 740.8,226 741.7,228 744,230.1 746,230.8 748,230.9ZM848,224.1 836,224.3 834.9,223 836,220.4 838,218.5 843,217.5 846,218.6 847.5,220 848.6,222ZM993,230 995,228.1 995.9,226 995.4,221 992,217.9 989,217.5 987,218 984.5,220 983.4,222 983.1,225 984,227.9 986,230 988,230.7 990,230.9ZM1112,224.2 1101,224.2 1100,223.8 1099.7,222 1103,218.1 1108,217.4 1112.2,220 1113.3,223ZM1230,224.2 1219,224.1 1218,223.8 1217.6,222 1218.6,220 1221,218.2 1226,217.5 1228.9,219 1230.6,221 1231.2,223ZM515,234.1 510,233.4 508.7,232 508.6,229 510,227.4 512,226.7 519.6,227 520.2,229 519,232ZM625,234 622,234 619.8,233 618.5,231 619,228.5 622,226.6 628,226.5 630,227 630.4,229 629,231.9Z"/>
       </svg>
+      </a>
     </div>
     <div class="topbar-actions">
       <div class="avatar" id="avatar" data-mood="neutral" aria-hidden="true" title="Scribe">
@@ -344,7 +432,7 @@
         <div class="avatar-bubble" id="avatarBubble" hidden></div>
       </div>
       <span class="topbar-hint">Cross-language translation with equivalence checks</span>
-      <nav class="auth-nav" aria-label="Account">
+      <nav class="auth-nav" id="authNav" aria-label="Account">
         <button type="button" class="btn-forest" data-about aria-haspopup="dialog" aria-expanded="false">About Us</button>
         <button type="button" class="btn-forest" data-open="loginDlg">Login</button>
         <button type="button" class="btn-forest" data-open="signupDlg">Sign up</button>
@@ -356,6 +444,9 @@
           <line x1="12" x2="12" y1="15" y2="3"/>
         </svg>
         Export
+      </button>
+      <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="authNav">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       </button>
     </div>
   </header>
@@ -517,13 +608,13 @@
       <p>Login to continue to Veriscribe.</p>
       <button type="button" class="dlg-x" data-close aria-label="Close">&times;</button>
     </div>
-    <form class="dlg-form" data-demo-form>
-      <label>Email<input type="email" required autocomplete="email" placeholder="you@example.com"></label>
+    <form class="dlg-form" data-demo-form novalidate>
+      <label>Email<input type="email" required autocomplete="email"></label>
       <label>Password
-        <span class="pw"><input type="password" required autocomplete="current-password" placeholder="Your password"><button type="button" class="pw-toggle" data-pw>Show</button></span>
+        <span class="pw"><input type="password" required autocomplete="current-password"><button type="button" class="pw-toggle" data-pw>Show</button></span>
       </label>
       <button type="submit" class="btn-forest btn-wide"><span class="spin" aria-hidden="true"></span>Login</button>
-      <p class="dlg-msg" hidden></p>
+      <p class="dlg-msg" role="status" aria-live="polite" hidden></p>
       <p class="dlg-switch">New here? <button type="button" data-switch="signupDlg">Sign up</button></p>
     </form>
   </dialog>
@@ -535,14 +626,14 @@
       <p>Join Veriscribe in under a minute.</p>
       <button type="button" class="dlg-x" data-close aria-label="Close">&times;</button>
     </div>
-    <form class="dlg-form" data-demo-form>
-      <label>Full name<input type="text" required autocomplete="name" placeholder="Your name"></label>
-      <label>Email<input type="email" required autocomplete="email" placeholder="you@example.com"></label>
+    <form class="dlg-form" data-demo-form novalidate>
+      <label>Full name<input type="text" required autocomplete="name"></label>
+      <label>Email<input type="email" required autocomplete="email"></label>
       <label>Password
-        <span class="pw"><input type="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters"><button type="button" class="pw-toggle" data-pw>Show</button></span>
+        <span class="pw"><input type="password" required minlength="6" autocomplete="new-password"><button type="button" class="pw-toggle" data-pw>Show</button></span>
       </label>
       <button type="submit" class="btn-forest btn-wide"><span class="spin" aria-hidden="true"></span>Create account</button>
-      <p class="dlg-msg" hidden></p>
+      <p class="dlg-msg" role="status" aria-live="polite" hidden></p>
       <p class="dlg-switch">Already have an account? <button type="button" data-switch="loginDlg">Login</button></p>
     </form>
   </dialog>
@@ -729,7 +820,8 @@
 
       /* About Us: anchored under its button, on the right */
       function place() {
-        var r = aboutBtn.getBoundingClientRect();
+        var mobile = window.matchMedia('(max-width: 720px)').matches;
+        var r = (mobile ? document.getElementById('menuBtn') : aboutBtn).getBoundingClientRect();
         var w = Math.min(320, window.innerWidth - 16);
         var right = Math.max(8, Math.min(window.innerWidth - r.right, window.innerWidth - w - 8));
         var arrow = (window.innerWidth - right) - (r.left + r.width / 2) - 6;
@@ -813,21 +905,112 @@
         });
       });
 
+      var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function validate(f) {
+        var found = null;
+        f.querySelectorAll('input').forEach(function (inp) {
+          inp.classList.remove('is-invalid');
+          if (found) return;
+          var label = (inp.closest('label').firstChild.textContent || 'This field').trim();
+          var isPw = inp.type === 'password' || inp.closest('.pw');
+          var v = isPw ? inp.value : inp.value.trim();
+          var min = parseInt(inp.getAttribute('minlength') || '0', 10);
+          var msg = '';
+          if (!v) msg = label + ' is required.';
+          else if (inp.getAttribute('type') === 'email' && !EMAIL.test(v)) msg = 'Enter a valid email address.';
+          else if (min && v.length < min) msg = label + ' must be at least ' + min + ' characters.';
+          if (msg) found = { input: inp, msg: msg };
+        });
+        return found;
+      }
+
       document.querySelectorAll('[data-demo-form]').forEach(function (f) {
+        var m = f.querySelector('.dlg-msg');
+        var btn = f.querySelector('.btn-wide');
+        f.addEventListener('input', function (e) { e.target.classList.remove('is-invalid'); });
         f.addEventListener('submit', function (e) {
           e.preventDefault();
-          var btn = f.querySelector('.btn-wide');
-          var m = f.querySelector('.dlg-msg');
           m.hidden = true;
+          m.classList.remove('is-error');
+          var err = validate(f);
+          if (err) {
+            err.input.classList.add('is-invalid');
+            err.input.focus();
+            m.textContent = err.msg;
+            m.classList.add('is-error');
+            m.setAttribute('role', 'alert');
+            m.hidden = false;
+            return;
+          }
+          m.setAttribute('role', 'status');
           btn.classList.add('is-loading');
           btn.disabled = true;
           setTimeout(function () {
             btn.classList.remove('is-loading');
             btn.disabled = false;
-            m.textContent = 'Demo mode: backend is not connected yet.';
+            var signup = f.closest('dialog').id === 'signupDlg';
+            m.textContent = signup
+              ? 'Account created! (Demo mode: nothing is saved yet.)'
+              : 'Logged in! (Demo mode: no real login yet.)';
             m.hidden = false;
           }, 900);
         });
+      });
+    })();
+  </script>
+  <script>
+    /* Mobile menu, clickable logo, export toast */
+    (function () {
+      var menuBtn = document.getElementById('menuBtn');
+      var nav = document.getElementById('authNav');
+
+      function setMenu(open) {
+        nav.classList.toggle('is-open', open);
+        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      }
+      menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMenu(!nav.classList.contains('is-open'));
+      });
+      /* capture phase: close the menu even though other handlers stop propagation */
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest('button')) setMenu(false);
+      }, true);
+      document.addEventListener('click', function (e) {
+        if (!nav.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+      window.addEventListener('resize', function () { if (window.innerWidth > 720) setMenu(false); });
+
+      /* Logo: scroll to top instead of reloading, so typed code is not lost */
+      document.getElementById('brandLink').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      /* Toast */
+      var toastEl = document.createElement('div');
+      toastEl.className = 'toast';
+      toastEl.setAttribute('role', 'status');
+      toastEl.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toastEl);
+      var toastTimer = 0;
+      function toast(msg, kind) {
+        toastEl.textContent = msg;
+        toastEl.classList.toggle('is-error', kind === 'error');
+        toastEl.classList.add('is-show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toastEl.classList.remove('is-show'); }, 2400);
+      }
+
+      var FILES = { cpp: 'solution.cpp', java: 'Main.java', python: 'solution.py' };
+      var exportBtn = document.getElementById('exportBtn');
+      var tgt = document.getElementById('tgtLang');
+      exportBtn.addEventListener('click', function () {
+        if (exportBtn.disabled) return;
+        toast('Downloaded ' + FILES[tgt.value]);
       });
     })();
   </script>

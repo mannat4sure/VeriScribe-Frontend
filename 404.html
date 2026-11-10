@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found &ndash; Veriscribe</title>
+  <meta name="description" content="The page you are looking for does not exist. Head back to Veriscribe to translate and verify your code.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#1f3d2b">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3d2b'/%3E%3Cpath d='M14 18l18 30 18-30' fill='none' stroke='%23e8dcc4' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root { --forest: #1f3d2b; --forest-hover: #2b5239; --sand: #e8dcc4; --muted: #40564a; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow-x: hidden; }
+    body {
+      display: flex; flex-direction: column;
+      background: var(--sand); color: var(--forest);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-weight: 500; -webkit-font-smoothing: antialiased;
+    }
+    .bar { flex: none; height: 56px; display: flex; align-items: center; padding: 0 16px; background: var(--forest); color: var(--sand); font-weight: 700; letter-spacing: .14em; font-size: 14px; }
+    .bar a { color: inherit; text-decoration: none; }
+    main { flex: 1; display: grid; place-items: center; padding: 24px; text-align: center; }
+    .card { max-width: 440px; animation: rise .45s ease both; }
+    .bot { width: 110px; height: 110px; margin: 0 auto 8px; animation: sway 3s ease-in-out infinite; }
+    h1 { margin: 0; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(64px, 18vw, 96px); line-height: 1; letter-spacing: .04em; }
+    h2 { margin: 10px 0 6px; font-size: 20px; }
+    p { margin: 0 0 22px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 42px; padding: 0 22px;
+      border: 1px solid var(--forest); border-radius: 8px;
+      background: var(--forest); color: var(--sand);
+      font-weight: 700; font-size: 14px; text-decoration: none;
+      transition: background-color .15s, transform .15s, box-shadow .15s;
+    }
+    .btn:hover { background: var(--forest-hover); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(31,61,43,.35); }
+    .btn:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+    @media (prefers-reduced-motion: reduce) { .card, .bot { animation: none; } }
+  </style>
+</head>
+<body>
+  <header class="bar"><a href="/" aria-label="Veriscribe home">VERISCRIBE</a></header>
+  <main>
+    <div class="card">
+      <svg class="bot" viewBox="0 0 64 64" role="img" aria-label="Sad Scribe mascot">
+        <path d="M10 64C10 55 20 53 32 53C44 53 54 55 54 64Z" fill="#cbbf9f"/>
+        <path d="M32 9V3.4" stroke="#1f3d2b" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+        <circle cx="32" cy="3.4" r="2.8" fill="#1f3d2b"/>
+        <rect x="8" y="9" width="48" height="43" rx="17" fill="#1f3d2b"/>
+        <circle cx="22.5" cy="29" r="7.5" fill="#fbf6e8"/><circle cx="22.5" cy="30.5" r="4" fill="#10261a"/>
+        <circle cx="41.5" cy="29" r="7.5" fill="#fbf6e8"/><circle cx="41.5" cy="30.5" r="4" fill="#10261a"/>
+        <path d="M27.5 47Q32 42.5 36.5 47" stroke="#e8dcc4" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <ellipse cx="18.5" cy="40" rx="1.8" ry="2.6" fill="#8fc7e8"/>
+      </svg>
+      <h1>404</h1>
+      <h2>This page does not exist</h2>
+      <p>The link may be broken or the page may have moved. Your code is safe, so head back and keep translating.</p>
+      <a class="btn" href="/">Back to Veriscribe</a>
+    </div>
+  </main>
+</body>
+</html>
