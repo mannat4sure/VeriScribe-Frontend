@@ -1,0 +1,69 @@
+
+.auth-nav { display: flex; align-items: center; gap: 8px; }
+
+.btn-forest {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 32px; padding: 0 14px;
+  border: 1px solid var(--sand);
+  border-radius: 6px;
+  background: var(--forest);
+  color: var(--sand);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.12s;
+}
+.btn-forest:hover { background: var(--forest-hover); }
+.btn-wide { width: 100%; height: 38px; font-size: 14px; }
+
+.dlg {
+  width: min(420px, 92vw);
+  padding: 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--sand);
+  color: var(--forest);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+.dlg::backdrop { background: rgba(16, 38, 26, 0.55); }
+
+.dlg-head { display: flex; align-items: center; justify-content: space-between; }
+.dlg-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.dlg-x {
+  width: 30px; height: 30px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--forest);
+  font-size: 22px; line-height: 1; cursor: pointer;
+}
+.dlg-x:hover { background: var(--bg-hover); }
+.dlg-sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.dlg-h3 { margin: 18px 0 10px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.founders { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.founders li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elev);
+}
+.f-ava {
+  flex: none; width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--forest); color: var(--sand);
+  font-weight: 700;
+}
+.f-name { font-weight: 700; letter-spacing: 0.04em; }
+
+.dlg-form { display: grid; gap: 12px; margin-top: 14px; }
+.dlg-form label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; }
+.dlg-form input {
+  height: 36px; padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--bg); color: var(--forest);
+  font: inherit;
+}
+.dlg-msg { margin: 0; color: var(--muted); font-size: 12px; }
+
+@media (max-width: 1100px) { .topbar-hint { display: none; } }
+@media (max-width: 560px) { .auth-nav .btn-forest { padding: 0 9px; font-size: 12px; } }
